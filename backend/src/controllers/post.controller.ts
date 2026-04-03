@@ -124,7 +124,7 @@ export const getPosts = async (req: AuthRequest, res: Response): Promise<void> =
 // Delete Post
 export const deletePost = async (req: AuthRequest, res: Response): Promise<void> => {
   try {
-    const { id } = req.params;
+    const id = req.params.id as string;
 
     const post = await prisma.post.findUnique({ where: { id } });
 
@@ -150,7 +150,7 @@ export const deletePost = async (req: AuthRequest, res: Response): Promise<void>
 // Like / Unlike Post
 export const togglePostLike = async (req: AuthRequest, res: Response): Promise<void> => {
   try {
-    const { id } = req.params;
+    const id = req.params.id as string;
 
     const post = await prisma.post.findUnique({ where: { id } });
     if (!post) {
@@ -182,7 +182,7 @@ export const togglePostLike = async (req: AuthRequest, res: Response): Promise<v
 // Get Post Likes (who liked)
 export const getPostLikes = async (req: AuthRequest, res: Response): Promise<void> => {
   try {
-    const { id } = req.params;
+    const id = req.params.id as string;
 
     const likes = await prisma.postLike.findMany({
       where: { postId: id },

@@ -5,7 +5,7 @@ import { AuthRequest } from '../middleware/auth.middleware';
 // Add Comment
 export const addComment = async (req: AuthRequest, res: Response): Promise<void> => {
   try {
-    const { id: postId } = req.params;
+    const postId = req.params.id as string;
     const { content } = req.body;
 
     if (!content) {
@@ -20,7 +20,7 @@ export const addComment = async (req: AuthRequest, res: Response): Promise<void>
     }
 
     const comment = await prisma.comment.create({
-      data: { content, authorId: req.userId!, postId },
+      data: { content, authorId: req.userId!, postId: postId },
       include: {
         author: {
           select: { id: true, firstName: true, lastName: true, avatar: true },
@@ -47,20 +47,20 @@ export const addComment = async (req: AuthRequest, res: Response): Promise<void>
 // Toggle Comment Like
 export const toggleCommentLike = async (req: AuthRequest, res: Response): Promise<void> => {
   try {
-    const { commentId } = req.params;
+    const commentId = req.params.commentId as string;
 
     const existing = await prisma.commentLike.findUnique({
-      where: { userId_commentId: { userId: req.userId!, commentId } },
+      where: { userId_commentId: { userId: req.userId!, commentId: commentId } },
     });
 
     if (existing) {
       await prisma.commentLike.delete({
-        where: { userId_commentId: { userId: req.userId!, commentId } },
+        where: { userId_commentId: { userId: req.userId!, commentId: commentId } },
       });
       res.json({ message: 'Comment unliked', liked: false });
     } else {
       await prisma.commentLike.create({
-        data: { userId: req.userId!, commentId },
+        data: { userId: req.userId!, commentId: commentId },
       });
       res.json({ message: 'Comment liked', liked: true });
     }
@@ -73,7 +73,7 @@ export const toggleCommentLike = async (req: AuthRequest, res: Response): Promis
 // Add Reply
 export const addReply = async (req: AuthRequest, res: Response): Promise<void> => {
   try {
-    const { commentId } = req.params;
+    const commentId = req.params.commentId as string;
     const { content } = req.body;
 
     if (!content) {
@@ -88,7 +88,7 @@ export const addReply = async (req: AuthRequest, res: Response): Promise<void> =
     }
 
     const reply = await prisma.reply.create({
-      data: { content, authorId: req.userId!, commentId },
+      data: { content, authorId: req.userId!, commentId: commentId },
       include: {
         author: {
           select: { id: true, firstName: true, lastName: true, avatar: true },
@@ -107,20 +107,20 @@ export const addReply = async (req: AuthRequest, res: Response): Promise<void> =
 // Toggle Reply Like
 export const toggleReplyLike = async (req: AuthRequest, res: Response): Promise<void> => {
   try {
-    const { replyId } = req.params;
+    const replyId = req.params.replyId as string;
 
     const existing = await prisma.replyLike.findUnique({
-      where: { userId_replyId: { userId: req.userId!, replyId } },
+      where: { userId_replyId: { userId: req.userId!, replyId: replyId } },
     });
 
     if (existing) {
       await prisma.replyLike.delete({
-        where: { userId_replyId: { userId: req.userId!, replyId } },
+        where: { userId_replyId: { userId: req.userId!, replyId: replyId } },
       });
       res.json({ message: 'Reply unliked', liked: false });
     } else {
       await prisma.replyLike.create({
-        data: { userId: req.userId!, replyId },
+        data: { userId: req.userId!, replyId: replyId },
       });
       res.json({ message: 'Reply liked', liked: true });
     }
@@ -133,10 +133,10 @@ export const toggleReplyLike = async (req: AuthRequest, res: Response): Promise<
 // Get Comment Likes
 export const getCommentLikes = async (req: AuthRequest, res: Response): Promise<void> => {
   try {
-    const { commentId } = req.params;
+    const commentId = req.params.commentId as string;
 
     const likes = await prisma.commentLike.findMany({
-      where: { commentId },
+      where: { commentId: commentId },
       include: {
         user: { select: { id: true, firstName: true, lastName: true, avatar: true } },
       },
@@ -152,10 +152,10 @@ export const getCommentLikes = async (req: AuthRequest, res: Response): Promise<
 // Get Reply Likes
 export const getReplyLikes = async (req: AuthRequest, res: Response): Promise<void> => {
   try {
-    const { replyId } = req.params;
+    const replyId = req.params.replyId as string;
 
     const likes = await prisma.replyLike.findMany({
-      where: { replyId },
+      where: { replyId: replyId },
       include: {
         user: { select: { id: true, firstName: true, lastName: true, avatar: true } },
       },
