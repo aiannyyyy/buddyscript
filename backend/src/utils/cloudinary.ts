@@ -1,4 +1,5 @@
 import { v2 as cloudinary } from 'cloudinary';
+import type { UploadApiResponse, UploadApiErrorResponse } from 'cloudinary';
 import dotenv from 'dotenv';
 
 dotenv.config();
@@ -20,7 +21,7 @@ export const uploadImage = async (fileBuffer: Buffer, folder: string): Promise<s
           { fetch_format: 'auto' },
         ],
       },
-      (error, result) => {
+      (error: UploadApiErrorResponse | undefined, result: UploadApiResponse | undefined) => {
         if (error || !result) {
           reject(error || new Error('Upload failed'));
         } else {
