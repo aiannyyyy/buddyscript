@@ -2,12 +2,10 @@ import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import api from '../api/axios';
-import { useAuthStore } from '../store/authStore';
 import type { AuthResponse } from '../types/index';
 
 const RegisterPage = () => {
   const navigate = useNavigate();
-  const { setAuth } = useAuthStore();
   const [isLoading, setIsLoading] = useState(false);
   const [formData, setFormData] = useState({
     firstName: '',
@@ -37,15 +35,14 @@ const RegisterPage = () => {
     }
     try {
       setIsLoading(true);
-      const res = await api.post<AuthResponse>('/auth/register', {
+      await api.post<AuthResponse>('/auth/register', {
         firstName: formData.firstName,
         lastName: formData.lastName,
         email: formData.email,
         password: formData.password,
       });
-      setAuth(res.data.user, res.data.token);
-      toast.success('Account created successfully!');
-      navigate('/feed');
+      toast.success('Account created successfully! Please login.');
+      navigate('/login');
     } catch (error: unknown) {
       const err = error as { response?: { data?: { message?: string } } };
       toast.error(err.response?.data?.message || 'Registration failed');
@@ -80,7 +77,7 @@ const RegisterPage = () => {
                 </div>
                 <form className="_social_registration_form" onSubmit={handleSubmit}>
                   <div className="row">
-                    <div className="col-xl-6">
+                    <div className="col-xl-6 col-lg-6 col-md-6 col-sm-12">
                       <div className="_social_registration_form_input _mar_b14">
                         <label className="_social_registration_label _mar_b8">First Name</label>
                         <input
@@ -93,7 +90,7 @@ const RegisterPage = () => {
                         />
                       </div>
                     </div>
-                    <div className="col-xl-6">
+                    <div className="col-xl-6 col-lg-6 col-md-6 col-sm-12">
                       <div className="_social_registration_form_input _mar_b14">
                         <label className="_social_registration_label _mar_b8">Last Name</label>
                         <input
@@ -106,7 +103,7 @@ const RegisterPage = () => {
                         />
                       </div>
                     </div>
-                    <div className="col-xl-12">
+                    <div className="col-xl-12 col-lg-12 col-md-12 col-sm-12">
                       <div className="_social_registration_form_input _mar_b14">
                         <label className="_social_registration_label _mar_b8">Email</label>
                         <input
@@ -119,7 +116,7 @@ const RegisterPage = () => {
                         />
                       </div>
                     </div>
-                    <div className="col-xl-12">
+                    <div className="col-xl-12 col-lg-12 col-md-12 col-sm-12">
                       <div className="_social_registration_form_input _mar_b14">
                         <label className="_social_registration_label _mar_b8">Password</label>
                         <input
@@ -132,7 +129,7 @@ const RegisterPage = () => {
                         />
                       </div>
                     </div>
-                    <div className="col-xl-12">
+                    <div className="col-xl-12 col-lg-12 col-md-12 col-sm-12">
                       <div className="_social_registration_form_input _mar_b14">
                         <label className="_social_registration_label _mar_b8">
                           Confirm Password
@@ -149,7 +146,24 @@ const RegisterPage = () => {
                     </div>
                   </div>
                   <div className="row">
-                    <div className="col-lg-12">
+                    <div className="col-lg-12 col-md-12 col-xl-12 col-sm-12">
+                      <div className="_social_registration_form_check _mar_b14">
+                        <div className="form-check">
+                          <input
+                            className="form-check-input _social_registration_form_check_input"
+                            type="checkbox"
+                            id="terms"
+                            required
+                          />
+                          <label className="form-check-label _social_registration_form_check_label" htmlFor="terms">
+                            I agree to terms & conditions
+                          </label>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="row">
+                    <div className="col-lg-12 col-md-12 col-xl-12 col-sm-12">
                       <div className="_social_registration_form_btn _mar_t40 _mar_b60">
                         <button
                           type="submit"
@@ -163,7 +177,7 @@ const RegisterPage = () => {
                   </div>
                 </form>
                 <div className="row">
-                  <div className="col-xl-12">
+                  <div className="col-xl-12 col-lg-12 col-md-12 col-sm-12">
                     <div className="_social_registration_bottom_txt">
                       <p className="_social_registration_bottom_txt_para">
                         Already have an account?{' '}
